@@ -9,11 +9,11 @@ def getUser():
     
     print(response)
 
-def enterUser():
+def enterUser(hrID):
     with grpc.insecure_channel('localhost:50051') as channel:
         stub = identity_pb2_grpc.IdentityStub(channel)
         response = stub.enterIdentity(identity_pb2.hrData(
-            hr_id = "00002", 
+            hr_id = str(hrID), 
             first_name = "dan", 
             middle_name = "b", 
             last_name = "hartman", 
@@ -25,4 +25,5 @@ def enterUser():
 
         print(response)
 
-enterUser()
+for i in range(1000000):
+    enterUser(i)
