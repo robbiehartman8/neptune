@@ -5,6 +5,4 @@ if __name__ == "__main__":
     session = cluster.connect('neptune',wait_for_all_pools=True)
     session.execute('USE neptune')
     rows = session.execute('SELECT * FROM identity')
-
-    for row in rows:
-        print(row)
+    print(rows[0].hr_id)

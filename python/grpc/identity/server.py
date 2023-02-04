@@ -2,33 +2,35 @@ from concurrent import futures
 import grpc
 import identity_pb2
 import identity_pb2_grpc
+from cassandra_util import CassandraUtil
 
 class Identity(identity_pb2_grpc.IdentityServicer):
 
-    # change to pickle
-    def getUserDict():
-        user_dict = {
-            "12345": ["12345", "rxh82f6", "robert", "m", "hartman", "eng", 9999, "new york", "00001"]
-        }
-        return user_dict
-
-    def getData(hr_id):
-        user_dict = Identity.getUserDict()
-        try:
-            search_data = user_dict[hr_id]
-            return search_data
-        except:
-            return None
-
     def getIdentity(self, request, context):
-        data = Identity.getData(request.hr_id)
-        if data:
-            response_data = identity_pb2.iamData(hr_id = data[0], user_name = data[1], first_name = data[2], middle_name = data[3], last_name = data[4], job_title = data[5], location_number = data[6], location_name = data[7], manager_hr_id = data[8])
-        else:
-            response_data = identity_pb2.iamData(hr_id = None, user_name = None, first_name = None, middle_name = None, last_name = None, job_title = None, location_number = None, location_name = None, manager_hr_id = None)
+        # TODO: query database for this value
+        
+        Cassandra = CassandraUtil()
+        session = Cassandra.getConnection()
+        rows = Cassandra.getIdentityByHrID(session, request.hr_id)
+
+        for row in rows:
+            response_data = identity_pb2.iamData(
+                hr_id = row.hr_id, 
+                user_name = row.user_name, 
+                first_name = row.first_name, 
+                middle_name = row.middle_name, 
+                last_name = row.last_name, 
+                job_title = row.job_title, 
+                location_number = row.location_number, 
+                location_name = row.location_name, 
+                manager_hr_id = row.manager_hr_id
+            )
+
         return response_data
 
     def enterIdentity(self, request, context):
+        # TODO: enter data into the database 
+
         hr_id = request.hr_id
         user_name = 'gen'
         first_name = request.first_name

@@ -25,4 +25,4 @@ def enterUser():
 
         print(response)
 
-
+getUser()
