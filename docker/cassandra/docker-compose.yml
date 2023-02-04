@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  cassandra:
+    image: cassandra:latest
+    ports:
+      - '9042:9042'
+    environment:
+      - CASSANDRA_SEEDS=cassandra
+      - CASSANDRA_PASSWORD_SEEDER=yes
+      - CASSANDRA_PASSWORD=cassandra
+
+# docker exec -it cassandra-cassandra-1 nodetool status
+# docker exec -it cassandra-cassandra-1 bash -c 'cqlsh'
