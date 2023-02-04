@@ -18,3 +18,9 @@ class CassandraUtil:
             return rows
         except:
             traceback.print_exception()
+
+    def insertIdentity(self, session, row):
+        try:
+            session.execute("INSERT INTO neptune.identity (hr_id, user_name, first_name, middle_name, last_name, job_title, location_number, location_name, manager_hr_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", row)
+        except:
+            traceback.print_exception()
